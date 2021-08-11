@@ -60,7 +60,10 @@ class ObjHelp{
     
     
 class DOMHelp{
-    
+    static _(string){
+        if(string[0]=="#"){return DOMHelp.$(string.substring(1));}
+        //if()
+    }
     static $(string){ 
           return  document.getElementById(string);
     }
@@ -86,7 +89,7 @@ class DOMHelp{
         return  document.getElementsByTagName(string);
         }
     }//EO tagn
-    
+    static OnLoad = function(event){}
 }
 
 
@@ -120,5 +123,6 @@ class NETHelp {
     
     
     
-    
-    
+document.addEventListener("DOMContentLoaded", function(event) {
+ DOMHelp.OnLoad(event);
+});
