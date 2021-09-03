@@ -115,15 +115,14 @@ static function createPdoQueryString($type, $table_name, $PARAMS){
  $query = ["prepare"=>$prepare];
  return $query;
 }
-static function getRandomToken($length){
+static function getRandomToken($length, $options="1aZ"){
  mt_srand( (double) microtime()  * 100000000);
  $randToken = "";
- $alphabets_Upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
- $alphabets_Lower = "abcdefghijklmnopqrstuvwxyz";
- $pool = $alphabets_Upper.$alphabets_Lower;
- for($i=0; $length>$i; $i++){
-    $randToken.= $pool[mt_rand(0, strlen($pool)-1)];
- }
+ $pool = "";
+ if(preg_match_all("/[A-Z]/", $options))$pool.="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+ if(preg_match_all("/[a-z]/", $options))$pool.="abcdefghijklmnopqrstuvwxyz";
+ if(preg_match_all("/[0-9]/", $options))$pool.="1234567890";
+ for($i=0; $length>$i; $i++){$randToken.= $pool[mt_rand(0, strlen($pool)-1)];}
  return($randToken);
 }
 static function uploadFile($FileKey, $imageFolder, $imageName){
@@ -140,18 +139,21 @@ static function uploadFile($FileKey, $imageFolder, $imageName){
      $illegal = array_merge(array_map('chr', range(0,31)), ["<", ">", ":", '"', "/", "\\", "|", "?","*", " "]);
      $filename = str_replace($illegal, "-", $imageFile['name']);
      $pathinfo = pathinfo($filename);
-     $imageExtension=$pathinfo['extension']?$pathinfo['extension']:'';
+     $imageExtension=$pathinfo['extension'] ? $pathinfo['extension']:'';
      $filename = $pathinfo['filename'] ? $pathinfo['filename']:'';
-     if(!empty($imageExtension) && !empty($filename)){
+     $basename = $pathinfo['basename'] ? $pathinfo['basename']:'';
+     if(!empty($imageExtension) && !empty($filename) 
+     && in_array($imageExtension, ["jpg", "webp", "png", "jpeg"])){
      } 
      else {    throw new Exception("filename or extension error"); }
          
-     //basename($imageFile["name"]);
+     
      if(!file_exists($imageFolder)) mkdir($imageFolder);
      $imageUrl = "$imageFolder/$imageName.$imageExtension"; 
      move_uploaded_file($imageFile["tmp_name"], $imageUrl);
      $imageProps->imageUrl = $imageUrl;
      $imageProps->imageName = $imageName;
+     $imageProps->imageFileName = "$imageName.$imageExtension";
      $imageProps->imageExtension = $imageExtension;
      $Response["imageProps"] = $imageProps;
      $Response["status"] = "ok";
@@ -159,6 +161,7 @@ static function uploadFile($FileKey, $imageFolder, $imageName){
      }catch(Exception $e){
      $Response["status"] = "error";
      $Response["error"][] = $e;
+     exit();
      }
  }
  else switch ($imageFile["error"]){
