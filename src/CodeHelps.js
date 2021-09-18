@@ -1,4 +1,3 @@
-console.info("Keywords: MHelp,  DOMHelp,  ObjHelp ");
 class MHelp{
     
     static compareArr(arr, arrComp, callback){
@@ -37,7 +36,12 @@ class MHelp{
     }
     static countIn(string, substring){
         return ( string.split(substring).length -1 );
-    } 
+    }
+    static breakUndefined(arg, context){
+        arg.map((a)=>{
+            if(a==undefined)context.return;
+        })
+    };
     
 }//EO MHelp
 
@@ -60,9 +64,9 @@ class ObjHelp{
     
     
 class DOMHelp{
-    static _(string){
-        if(string[0]=="#"){return DOMHelp.$(string.substring(1));}
-        //if()
+    static _(string, index=0){
+        let element = DOMHelp.SLT(string, index);
+        return element;
     }
     static $(string){ 
           return  document.getElementById(string);
@@ -89,6 +93,17 @@ class DOMHelp{
         return  document.getElementsByTagName(string);
         }
     }//EO tagn
+    static SLT(string, index){
+        if(typeof index == "number"){ 
+          return  document.querySelectorAll(string)[index];
+        }
+        if(index == "length"){
+         return  document.querySelectorAll(string).length;    
+        }
+        if(index == "this"){ 
+        return  document.querySelectorAll(string);
+        }
+    }
     static OnLoad = function(event){}
 }
 
@@ -96,20 +111,15 @@ class DOMHelp{
 
 class NETHelp {
     static AJAX(type, params, address, callback, callbackYet=function(){} ){
-        var url = address + '?';
-        var notFirst = false;
+        var url = address + '?'; var notFirst = false;
         for (var key in params) {
-            if (params.hasOwnProperty(key)) {
-                url += (notFirst ? '&' : '') + key + "=" + params[key];
-            }
+            if (params.hasOwnProperty(key)) {url += (notFirst ? '&' : '') + key + "=" + params[key];}
             notFirst = true;
         }
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == 4 ){
-            if (xmlhttp.status == 200) {
-                callback(xmlhttp.responseText);
-        }
+        if(xmlhttp.readyState == 4){
+            if(xmlhttp.status == 200){callback(xmlhttp.responseText);}
         }
         else{callbackYet();}
         };

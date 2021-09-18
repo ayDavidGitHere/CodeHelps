@@ -72,9 +72,9 @@ class CSPJ{
     public function sendComment($commentSender, $message, $extras, $arr_pathNum){
             ///generateds
             $timestamp = (new DateTime())->format("D, M j 'y - h:i:s");
-            $uniqueTok = getRandomToken();
+            $uniqueToken = getRandomToken();
             $this->commentSender = $commentSender;
-            $arr_messageData = array("sender"=>$this->commentSender, "message"=>$message, "uniqueTok"=>$uniqueTok ,"timestamp"=>$timestamp ,"extras"=>$extras,"subNode"=>[]);
+            $arr_messageData = array("sender"=>$this->commentSender, "message"=>$message, "uniqueTok"=>$uniqueToken ,"timestamp"=>$timestamp ,"extras"=>$extras,"subNode"=>[]);
             
             $arr_N = $this->arr_N;
             //editing internal multidimension with $arr_pathNum elements
@@ -85,13 +85,7 @@ class CSPJ{
             array_push( $appendToPath, $arr_messageData);
             
             file_put_contents($this->commentsJsonFileName,
-            json_encode($arr_N));   
-            
-            /*
-            print "<pre>";
-            print_r(  $arr_N);
-            print "</pre>";
-            */
+            json_encode($arr_N));
     }//EO sendComm
 
 
@@ -211,18 +205,17 @@ if(isset($_POST["sendComment"])){
     $message = "commentBody";
     $extras = json_encode([]);
     $sendInd = [];
-        if(is_object($argumentsInJson)){            
-            $sender =  $argumentsInJson->sender;
-            $message = $argumentsInJson->body;
-            $sendInd = $argumentsInJson->sendInd;
-            $extras = $argumentsInJson->extras;
-            
-        }
-        if(is_array($argumentsInJson)){            
-            $sender = $argumentsInJson[0];
-            $message = $argumentsInJson[1];
-            $sendInd = $argumentsInJson[2];
-        }
+    if(is_object($argumentsInJson)){            
+        $sender =  $argumentsInJson->sender;
+        $message = $argumentsInJson->body;
+        $sendInd = $argumentsInJson->sendInd;
+        $extras = $argumentsInJson->extras;
+    }
+    if(is_array($argumentsInJson)){            
+        $sender = $argumentsInJson[0];
+        $message = $argumentsInJson[1];
+        $sendInd = $argumentsInJson[2];
+    }
         
     }
     else{
