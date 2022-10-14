@@ -1,5 +1,5 @@
-# CodeHelp Files, in Javascript and Php
-Quick js and php helper functions.
+# CodeHelps
+## Javascript and Php Helper Functions.
 #### DOMHelp
 #### MATHHelp
 #### OBJHelp
