@@ -1,6 +1,6 @@
 # CodeHelps
 ## Javascript and Php Helper Functions.
-#### DOMHelp
-#### MATHHelp
-#### OBJHelp
+#### DOMHelp -> DOM$
+#### MATHHelp -> MATH$
+#### OBJHelp  -> OBJ$
 #### NETWORKREQUESTHelp
